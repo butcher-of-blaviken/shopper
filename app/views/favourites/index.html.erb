@@ -1,0 +1,16 @@
+<h1>Your Favourites</h1>
+
+<ul>
+  <%= @favourites.each do |favorite| %>
+      <li>
+        <a href="<%= favorite.image_thumb_url %>">
+          <img src="<%= favorite.image_thumb_url %>" style="width: 128px; height: 128px;"/>
+        </a>
+        <%= link_to favorite.name, "/items/#{favorite.id}" %>
+        | $<%= favorite.get_price_in_dollars %>
+        | <%= favorite.alcohol_content_in_percent %> % (Alcohol Content)
+        | Variety: <%= favorite.varietal %>
+        | <%= favorite.volume_in_milliliters %>ml
+      </li>
+  <% end ;%>
+</ul>

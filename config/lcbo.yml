@@ -1,0 +1,12 @@
+default: &default
+  api_url: "https://lcboapi.com"
+  api_key: <%= ENV['LCBO_API_KEY'] %>
+
+development:
+  <<: *default
+
+production:
+  <<: *default
+
+test:
+  <<: *default

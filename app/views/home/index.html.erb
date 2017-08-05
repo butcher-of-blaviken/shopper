@@ -1,0 +1,54 @@
+<h1>LCBO Shopper</h1>
+<p>Welcome to LCBO shopper, where you can view and shop for items at LCBO!</p>
+
+<ul>
+  <% if !user_signed_in? %>
+      <li>
+        <%= link_to "Sign Up", new_user_registration_path %>
+      </li>
+      <li>
+        <%= link_to "Sign In", new_user_session_path %>
+      </li>
+  <% else %>
+      <li>
+        <%= link_to "Sign Out", destroy_user_session_path, method: :delete %>
+      </li>
+  <% end %>
+</ul>
+
+<p>Search:</p>
+<%= form_tag home_index_path, method: :get do %>
+    <p>
+      <%= text_field_tag :search %>
+      <%= hidden_field_tag :page, 1 %>
+      <%= submit_tag "Search" %>
+    </p>
+<% end %>
+
+<% if @products.present? %>
+    <h2>Search results</h2>
+<% end %>
+<ul>
+  <% @products.each do |product| %>
+      <li>
+        <a href="<%= product.image_thumb_url %>">
+          <img src="<%= product.image_thumb_url %>" style="width: 128px; height: 128px;"/>
+        </a>
+        <%= link_to product.name, "/items/#{product.id}" %>
+        | $<%= product.get_price_in_dollars %>
+        | <%= product.alcohol_content_in_percent %> % (Alcohol Content)
+        | Variety: <%= product.varietal %>
+        | <%= product.volume_in_milliliters %>ml
+      </li>
+  <% end %>
+</ul>
+
+<% if @products.present? %>
+    <%= form_tag home_index_path, method: :get do %>
+        <p>
+          <%= hidden_field_tag :page, @next_page %>
+          <%= hidden_field_tag :search, @query %>
+          <%= submit_tag 'Next page' %>
+        </p>
+    <% end %>
+<% end %>

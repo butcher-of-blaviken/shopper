@@ -1,0 +1,25 @@
+<img src="<%= @product.image_thumb_url %>" />
+<ul>
+  <li>
+    Name: <%= @product.name %>
+  </li>
+  <li>
+    Alcohol Content: <%= @product.alcohol_content_in_percent %> %
+  </li>
+  <li>
+    Origin: <%= @product.origin %>
+  </li>
+  <li>
+    Price:  $<%= @product.price_in_cents.to_f / 100 %>
+  </li>
+</ul>
+
+<% if user_signed_in? && Favourite.where(user_id: current_user.id, product_id: @product.id).empty? %>
+    <%= form_tag favourites_path, method: :post do %>
+        <p>
+          <%= hidden_field_tag :user_id, current_user.id %>
+          <%= hidden_field_tag :product_id, @product.id %>
+          <%= submit_tag "Favorite" %>
+        </p>
+    <% end %>
+<% end %>

@@ -1,0 +1,16 @@
+<h1>My Activity</h1>
+
+
+<ul>
+  <% @user_activities.each do |activity| %>
+      <li>
+        <% if activity.product_view? %>
+            Viewed product <%= link_to Product.find(activity.object_id).name, "/items/#{activity.object_id}" %> at <%= activity.time_performed %>
+        <% elsif activity.product_favorite? %>
+            Favourited product <%= link_to Product.find(activity.object_id).name, "/items/#{activity.object_id}" %> at <%= activity.time_performed %>
+        <% elsif activity.product_unfavorite? %>
+            Unfavourited product <%= link_to Product.find(activity.object_id).name, "/items/#{activity.object_id}" %> at <%= activity.time_performed %>
+        <% end %>
+      </li>
+  <% end %>
+</ul>
