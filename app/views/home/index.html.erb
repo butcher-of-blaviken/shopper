@@ -1,54 +1,63 @@
-<h1>LCBO Shopper</h1>
-<p>Welcome to LCBO shopper, where you can view and shop for items at LCBO!</p>
+<div class="container">
+  <div class="input-group input-group-lg">
+    <%= form_tag home_index_path, method: :get, class: 'form-control' do %>
+        <p>
+          <%= text_field_tag :search %>
+          <%= hidden_field_tag :page, 1 %>
+          <%= submit_tag "Search" %>
+        </p>
+    <% end %>
+  </div>
+</div>
 
-<ul>
-  <% if !user_signed_in? %>
-      <li>
-        <%= link_to "Sign Up", new_user_registration_path %>
-      </li>
-      <li>
-        <%= link_to "Sign In", new_user_session_path %>
-      </li>
-  <% else %>
-      <li>
-        <%= link_to "Sign Out", destroy_user_session_path, method: :delete %>
-      </li>
-  <% end %>
-</ul>
+<div class="container">
+  <div class="well well-sm">
+    <strong>Category Title</strong>
+    <div class="btn-group">
+      <a href="#" id="list" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-th-list">
+            </span>List</a> <a href="#" id="grid" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-th"></span>Grid</a>
+    </div>
 
-<p>Search:</p>
-<%= form_tag home_index_path, method: :get do %>
-    <p>
-      <%= text_field_tag :search %>
-      <%= hidden_field_tag :page, 1 %>
-      <%= submit_tag "Search" %>
-    </p>
-<% end %>
+    <% if @products.present? %>
+        <%= form_tag home_index_path, method: :get do %>
+            <p>
+              <%= hidden_field_tag :page, @next_page %>
+              <%= hidden_field_tag :search, @query %>
+              <%= submit_tag 'Next page' %>
+            </p>
+        <% end %>
+    <% end %>
+  </div>
 
-<% if @products.present? %>
-    <h2>Search results</h2>
-<% end %>
-<ul>
-  <% @products.each do |product| %>
-      <li>
+  <div id="products" class="row list-group">
+    <% @products.each do |product| %>
+    <div class="item col-xs-4 col-lg-4">
+      <div class="thumbnail">
         <a href="<%= product.image_thumb_url %>">
           <img src="<%= product.image_thumb_url %>" style="width: 128px; height: 128px;"/>
         </a>
-        <%= link_to product.name, "/items/#{product.id}" %>
-        | $<%= product.get_price_in_dollars %>
-        | <%= product.alcohol_content_in_percent %> % (Alcohol Content)
-        | Variety: <%= product.varietal %>
-        | <%= product.volume_in_milliliters %>ml
-      </li>
-  <% end %>
-</ul>
-
-<% if @products.present? %>
-    <%= form_tag home_index_path, method: :get do %>
-        <p>
-          <%= hidden_field_tag :page, @next_page %>
-          <%= hidden_field_tag :search, @query %>
-          <%= submit_tag 'Next page' %>
-        </p>
+        <div class="caption">
+          <h4 class="group inner list-group-item-heading">
+            <%= link_to product.name, "/items/#{product.id}" %>
+          </h4>
+          <p class="group inner list-group-item-text">
+            <%= product.alcohol_content_in_percent %> % (Alcohol Content)
+            | Variety: <%= product.varietal %>
+            | <%= product.volume_in_milliliters %>ml
+          </p>
+          <div class="row">
+            <div class="col-xs-12 col-md-6">
+              <p class="lead">
+                $<%= product.get_price_in_dollars %>
+              </p>
+            </div>
+            <div class="col-xs-12 col-md-6">
+              <a class="btn btn-success" href="#">Add to Favourites</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
     <% end %>
-<% end %>
+  </div>
+</div>
