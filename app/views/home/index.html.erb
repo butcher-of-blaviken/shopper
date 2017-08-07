@@ -4,35 +4,29 @@
         <p>
           <%= text_field_tag :search %>
           <%= hidden_field_tag :page, 1 %>
-          <%= submit_tag "Search" %>
+          <%= submit_tag "Search", class: 'btn btn-primary btn-success' %>
         </p>
     <% end %>
   </div>
-</div>
 
-<div class="container">
-  <div class="well well-sm">
-    <strong>Category Title</strong>
-    <div class="btn-group">
-      <a href="#" id="list" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-th-list">
-            </span>List</a>
-      <a href="#" id="grid" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-th"></span>Grid</a>
-    </div>
-
+  <div class="pull-left">
     <% if @products.present? %>
         <%= form_tag home_index_path, method: :get do %>
             <p>
               <%= hidden_field_tag :page, @next_page %>
               <%= hidden_field_tag :search, @query %>
-              <%= submit_tag 'Next page' %>
+              <%= submit_tag 'Next page', class: 'btn btn-primary btn-success' %>
             </p>
         <% end %>
     <% end %>
   </div>
+</div>
+
+<div class="container">
 
   <div id="products" class="row list-group">
     <% @products.each do |product| %>
-        <div class="item col-xs-4 col-lg-4">
+        <div class="item col-xs-6 col-lg-6">
           <div class="thumbnail">
             <a href="<%= product.image_thumb_url %>">
               <img src="<%= product.image_thumb_url %>" style="width: 128px; height: 128px;"/>
@@ -55,12 +49,22 @@
 
                 <% if user_signed_in? %>
                     <div class="col-xs-12 col-md-6">
-                      <%= form_tag favourites_path, method: :post do %>
-                          <p>
-                            <%= hidden_field_tag :user_id, current_user.id %>
-                            <%= hidden_field_tag :product_id, product.id %>
-                            <%= submit_tag "Add to Favourites", class: 'btn btn-primary btn-success' %>
-                          </p>
+                      <% if Favourite.where(user_id: current_user.id, product_id: product.id).empty? %>
+                          <%= form_tag favourites_path, method: :post do %>
+                              <p>
+                                <%= hidden_field_tag :user_id, current_user.id %>
+                                <%= hidden_field_tag :product_id, product.id %>
+                                <%= submit_tag "Add to Favourites", class: 'btn btn-primary btn-success' %>
+                              </p>
+                          <% end %>
+                      <% else %>
+                          <%= form_tag favourites_path, method: :delete do %>
+                              <p>
+                                <%= hidden_field_tag :user_id, current_user.id %>
+                                <%= hidden_field_tag :product_id, product.id %>
+                                <%= submit_tag "Remove from Favourites", class: 'btn btn-primary btn-danger' %>
+                              </p>
+                          <% end %>
                       <% end %>
                     </div>
                 <% end %>
@@ -68,6 +72,18 @@
             </div>
           </div>
         </div>
+    <% end %>
+  </div>
+
+  <div class="pull-right">
+    <% if @products.present? %>
+        <%= form_tag home_index_path, method: :get do %>
+            <p>
+              <%= hidden_field_tag :page, @next_page %>
+              <%= hidden_field_tag :search, @query %>
+              <%= submit_tag 'Next page', class: 'btn btn-primary btn-success' %>
+            </p>
+        <% end %>
     <% end %>
   </div>
 </div>
