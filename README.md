@@ -1,24 +1,49 @@
-# README
+# LCBO Shopper
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+## What does this Application do?
 
-Things you may want to cover:
+LCBO Shopper is an application that allows you to search LCBO's inventory and favorite
+items that you like.
 
-* Ruby version
+It is a Ruby On Rails application that uses PostgreSQL as the backing database and
+SendGrid as an e-mail sender. It caches some responses from LCBO in different ways:
+it caches search results in `Rails.cache` and caches product information in PostgreSQL.
 
-* System dependencies
+### Other feature possibilities
 
-* Configuration
+We have not used the LCBO API to its full extent. The next step would be to get
+the user's location and use that to show them whether the item they are viewing is
+in stock in stores close to them.
 
-* Database creation
+## Ruby version 
+2.3.4
 
-* Database initialization
+## Database creation
+```bash
+$ bundle exec rake db:create
+$ bundle exec rake db:migrate
+```
 
-* How to run the test suite
+## Tests
 
-* Services (job queues, cache servers, search engines, etc.)
+```bash
+$ bundle exec rake
+```
 
-* Deployment instructions
+## Environment Variables
 
-* ...
+This app uses SendGrid to send password reset e-mails to the user, and uses 
+an LCBO API Key in order to access the LCBO API. Therefore, the environment variables
+needed are:
+
+* `SENDGRID_USERNAME`, `SENDGRID_PASSWORD` for SendGrid e-mail sending.
+* `LCBO_API_KEY` for LCBO API calls.
+
+## Deployment
+
+```bash
+$ heroku create
+$ git add -A
+$ git commit -m "c message"
+$ git push heroku master
+```
