@@ -1,16 +1,50 @@
-<h1>My Activity</h1>
-
-
-<ul>
-  <% @user_activities.each do |activity| %>
-      <li>
-        <% if activity.product_view? %>
-            Viewed product <%= link_to Product.find(activity.object_id).name, "/items/#{activity.object_id}" %> at <%= activity.time_performed %>
-        <% elsif activity.product_favorite? %>
-            Favourited product <%= link_to Product.find(activity.object_id).name, "/items/#{activity.object_id}" %> at <%= activity.time_performed %>
-        <% elsif activity.product_unfavorite? %>
-            Unfavourited product <%= link_to Product.find(activity.object_id).name, "/items/#{activity.object_id}" %> at <%= activity.time_performed %>
+<div class="container">
+  <h2>My Activity</h2>
+  <div class="row">
+    <div class="col-xs-6">
+      <ul class="list-group">
+        <% @user_activities.each do |activity| %>
+            <% if activity.product_view? %>
+                <li class="list-group-item">
+                  Viewed product <%= link_to Product.find(activity.object_id).name, "/items/#{activity.object_id}" %>
+                  at <%= activity.time_performed %>
+                </li>
+            <% elsif activity.product_favorite? %>
+                <li class="list-group-item">
+                  Favourited product <%= link_to Product.find(activity.object_id).name, "/items/#{activity.object_id}" %>
+                  at <%= activity.time_performed %>
+                </li>
+            <% elsif activity.product_unfavorite? %>
+                <li class="list-group-item">
+                  Unfavourited product <%= link_to Product.find(activity.object_id).name, "/items/#{activity.object_id}" %>
+                  at <%= activity.time_performed %>
+                </li>
+            <% end %>
         <% end %>
-      </li>
-  <% end %>
-</ul>
+      </ul>
+    </div>
+
+    <div class="col-xs-6">
+      <table class="table table-striped table-bordered">
+        <thead>
+        <tr>
+          <th>Product ID</th>
+          <th>Product Name</th>
+          <th>Action</th>
+          <th>Times performed</th>
+        </tr>
+        </thead>
+        <tbody>
+        <% @activities_by_action.each do |aba| %>
+        <tr>
+          <th scope="row"><%= aba[:object_id] %></th>
+          <th><%= link_to Product.find_by(id: aba[:object_id]).name, "/items/#{aba[:object_id]}" %></th>
+          <th><%= action_to_s(aba[:action]) %></th>
+          <th><%= aba[:count] %></th>
+        </tr>
+        <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

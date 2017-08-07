@@ -28,7 +28,7 @@ class FavouritesController < ApplicationController
                         product_id: favourite_params[:product_id])
     if f.present?
       f.destroy_all
-      render json: { success: true }, status: :ok
+      redirect_to "/items/#{params[:product_id]}"
     else
       render json: {error: 'Could not find favourite'},
              status: :not_found

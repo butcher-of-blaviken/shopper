@@ -15,7 +15,8 @@
     <strong>Category Title</strong>
     <div class="btn-group">
       <a href="#" id="list" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-th-list">
-            </span>List</a> <a href="#" id="grid" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-th"></span>Grid</a>
+            </span>List</a>
+      <a href="#" id="grid" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-th"></span>Grid</a>
     </div>
 
     <% if @products.present? %>
@@ -31,33 +32,42 @@
 
   <div id="products" class="row list-group">
     <% @products.each do |product| %>
-    <div class="item col-xs-4 col-lg-4">
-      <div class="thumbnail">
-        <a href="<%= product.image_thumb_url %>">
-          <img src="<%= product.image_thumb_url %>" style="width: 128px; height: 128px;"/>
-        </a>
-        <div class="caption">
-          <h4 class="group inner list-group-item-heading">
-            <%= link_to product.name, "/items/#{product.id}" %>
-          </h4>
-          <p class="group inner list-group-item-text">
-            <%= product.alcohol_content_in_percent %> % (Alcohol Content)
-            | Variety: <%= product.varietal %>
-            | <%= product.volume_in_milliliters %>ml
-          </p>
-          <div class="row">
-            <div class="col-xs-12 col-md-6">
-              <p class="lead">
-                $<%= product.get_price_in_dollars %>
+        <div class="item col-xs-4 col-lg-4">
+          <div class="thumbnail">
+            <a href="<%= product.image_thumb_url %>">
+              <img src="<%= product.image_thumb_url %>" style="width: 128px; height: 128px;"/>
+            </a>
+            <div class="caption">
+              <h4 class="group inner list-group-item-heading">
+                <%= link_to product.name, "/items/#{product.id}" %>
+              </h4>
+              <p class="group inner list-group-item-text">
+                <%= product.alcohol_content_in_percent %> % (Alcohol Content)
+                | Variety: <%= product.varietal %>
+                | <%= product.volume_in_milliliters %>ml
               </p>
-            </div>
-            <div class="col-xs-12 col-md-6">
-              <a class="btn btn-success" href="#">Add to Favourites</a>
+              <div class="row">
+                <div class="col-xs-12 col-md-6">
+                  <p class="lead">
+                    $<%= product.get_price_in_dollars %>
+                  </p>
+                </div>
+
+                <% if user_signed_in? %>
+                    <div class="col-xs-12 col-md-6">
+                      <%= form_tag favourites_path, method: :post do %>
+                          <p>
+                            <%= hidden_field_tag :user_id, current_user.id %>
+                            <%= hidden_field_tag :product_id, product.id %>
+                            <%= submit_tag "Add to Favourites", class: 'btn btn-primary btn-success' %>
+                          </p>
+                      <% end %>
+                    </div>
+                <% end %>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </div>
     <% end %>
   </div>
 </div>

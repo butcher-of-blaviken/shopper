@@ -1,25 +1,64 @@
-<img src="<%= @product.image_thumb_url %>" />
-<ul>
-  <li>
-    Name: <%= @product.name %>
-  </li>
-  <li>
-    Alcohol Content: <%= @product.alcohol_content_in_percent %> %
-  </li>
-  <li>
-    Origin: <%= @product.origin %>
-  </li>
-  <li>
-    Price:  $<%= @product.price_in_cents.to_f / 100 %>
-  </li>
-</ul>
+<div class="container">
+  <div class="media">
+    <div class="media-left">
+      <img src="<%= @product.image_url %>" style="width: 480px; height: 640px;"/>
+    </div>
 
-<% if user_signed_in? && Favourite.where(user_id: current_user.id, product_id: @product.id).empty? %>
-    <%= form_tag favourites_path, method: :post do %>
-        <p>
-          <%= hidden_field_tag :user_id, current_user.id %>
-          <%= hidden_field_tag :product_id, @product.id %>
-          <%= submit_tag "Favorite" %>
-        </p>
-    <% end %>
-<% end %>
+    <div class="media-body">
+      <h4 class="media-heading"><%= @product.name %></h4>
+      <ul class="list-group">
+        <li class="list-group-item">
+          Alcohol Content: <%= @product.alcohol_content_in_percent %> %
+        </li>
+        <li class="list-group-item">
+          Origin: <%= @product.origin %>
+        </li>
+        <li class="list-group-item">
+          Price: $<%= @product.price_in_cents.to_f / 100 %>
+        </li>
+        <% if @product.description.present? %>
+            <li class="list-group-item">
+              <%= @product.description %>
+            </li>
+        <% end %>
+        <% if @product.varietal.present? %>
+            <li class="list-group-item">
+              <%= @product.varietal %>
+            </li>
+        <% end %>
+        <% if @product.style.present? %>
+            <li class="list-group-item">
+              <%= @product.style %>
+            </li>
+        <% end %>
+      </ul>
+
+      <% if user_signed_in? %>
+          <% if Favourite.where(user_id: current_user.id, product_id: @product.id).empty? %>
+              <%= form_tag favourites_path, method: :post do %>
+                  <p>
+                    <%= hidden_field_tag :user_id, current_user.id %>
+                    <%= hidden_field_tag :product_id, @product.id %>
+                    <%= submit_tag "Add to Favourites", class: 'btn btn-primary btn-success' %>
+                  </p>
+              <% end %>
+          <% else %>
+              <%= form_tag favourites_path, method: :delete do %>
+                  <p>
+                    <%= hidden_field_tag :user_id, current_user.id %>
+                    <%= hidden_field_tag :product_id, @product.id %>
+                    <%= submit_tag "Remove from Favourites", class: 'btn btn-primary btn-danger' %>
+                  </p>
+              <% end %>
+          <% end %>
+      <% else %>
+      <div class="btn-group" role="group">
+        <button type="button" class="btn btn-default"><%= link_to "Sign Up", new_user_registration_path %></button>
+        <button type="button" class="btn btn-default"><%= link_to "Sign In", new_user_session_path %></button>
+      </div>
+      <% end %>
+    </div>
+
+
+  </div>
+</div>
