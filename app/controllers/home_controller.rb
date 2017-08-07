@@ -19,10 +19,6 @@ class HomeController < ApplicationController
   end
 
   def search_cache_key(query, per_page, page)
-    if page.nil?
-      "#{URI::encode(query)}-#{per_page}-"
-    else
-      "#{URI::encode(query)}-#{per_page}-#{page}"
-    end
+    "#{URI::encode(query)}-#{per_page.to_s}-#{page.to_s}"
   end
 end
